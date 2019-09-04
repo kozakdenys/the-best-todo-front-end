@@ -1,5 +1,5 @@
 <template>
-    <ul>
+    <ul class="list">
         <li v-for="item in items" :key="item.key">
             <TODOItem :item="item" :edit="editItem" :remove="removeItem" :validation="validation" />
         </li>

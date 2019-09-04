@@ -1,0 +1,30 @@
+.input-form__input-container {
+    display: flex;
+}
+
+.input-form__input {
+    flex-grow: 1;
+    color: #5d99c6;
+    font: inherit;
+    padding: 10px 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #e3f2fd;
+    border-radius: 5px;
+}
+
+.input-form__validation {
+    padding-inline-start: 0;
+}
+
+.input-form__validation li{
+    display: block;
+}
+
+.input-form__button {
+    margin-left: 5px;
+}
+
+.input-form--header .input-form__button {
+    border-color: #e3f2fd;
+}

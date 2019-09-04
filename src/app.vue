@@ -1,8 +1,26 @@
 <template>
-    <main>
-        <h1>TODO</h1>
-        <TODOInput :submit="addItem" :validation="validation" id="task-form"></TODOInput>
-        <TODOList :items="items" :removeItem="removeItem" :editItem="editItem" :validation="validation"></TODOList>
+    <main class="main">
+        <section class="header container">
+            <div class="row">
+                <h1>Every DEV should have TODO!</h1>
+                <TODOInput
+                    class="input-form--header"
+                    :submit="addItem"
+                    :validation="validation"
+                    id="task-form"
+                ></TODOInput>
+            </div>
+        </section>
+        <section class="list container">
+            <div class="row">
+                <TODOList
+                    :items="items"
+                    :removeItem="removeItem"
+                    :editItem="editItem"
+                    :validation="validation"
+                ></TODOList>
+            </div>
+        </section>
     </main>
 </template>
 
@@ -29,6 +47,7 @@ interface ComponentData {
 interface Item {
     key: number;
     value: string;
+    done: boolean;
 }
 
 export default Vue.extend({
@@ -54,7 +73,8 @@ export default Vue.extend({
         addItem: function(value: string): void {
             const item = {
                 value: value,
-                key: hashCode(value)
+                key: hashCode(value),
+                done: false
             };
             this.items.unshift(item);
         },
@@ -66,10 +86,7 @@ export default Vue.extend({
                 if (oldItem.key !== item.key) {
                     return oldItem;
                 } else {
-                    return {
-                        value: item.value,
-                        key: oldItem.key
-                    };
+                    return item;
                 }
             });
         }

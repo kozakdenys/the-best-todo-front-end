@@ -1,8 +1,10 @@
 <template>
-    <form :id="id" @submit="onSubmit">
-        <input type="text" v-model="value" ref="input" />
-        <button type="submit">{{ buttonText }}</button>
-        <ul v-if="errors.length">
+    <form :id="id" @submit="onSubmit" class="input-form">
+        <div class="input-form__input-container">
+            <input type="text" v-model="value" ref="input" class="input-form__input" />
+            <button class="input-form__button" type="submit">{{ buttonText }}</button>
+        </div>
+        <ul v-if="errors.length" class="input-form__validation">
             <li :key="error" class="validation-error" v-for="error in errors">{{ error }}</li>
         </ul>
     </form>
