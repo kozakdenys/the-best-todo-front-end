@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-for="item in items" :key="item.key">
-            <TODOItem :item="item" :edit="editItem" :remove="removeItem" />
+            <TODOItem :item="item" :edit="editItem" :remove="removeItem" :validation="validation" />
         </li>
     </ul>
 </template>
@@ -14,7 +14,8 @@ export default Vue.extend({
     props: {
         items: Array,
         removeItem: Function,
-        editItem: Function
+        editItem: Function,
+        validation: Function
     },
     components: {
         TODOItem: item

@@ -1,8 +1,7 @@
 <template>
-    <form id="task-form" @submit="onSubmit">
-        <label for="value">TODO</label>
-        <input id="value" type="text" v-model="value" />
-        <button type="submit">Add</button>
+    <form :id="id" @submit="onSubmit">
+        <input type="text" v-model="value" ref="input" />
+        <button type="submit">{{ buttonText }}</button>
         <ul v-if="errors.length">
             <li :key="error" class="validation-error" v-for="error in errors">{{ error }}</li>
         </ul>
@@ -12,16 +11,6 @@
 <script lang="ts">
 import Vue from "vue";
 
-function hashCode(value: string): number {
-    let hash = 0;
-    for (let i = 0; i < value.length; i++) {
-        const character = value.charCodeAt(i);
-        hash = (hash << 5) - hash + character;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-}
-
 interface ComponentData {
     value: string;
     errors: string[];
@@ -29,34 +18,48 @@ interface ComponentData {
 
 export default Vue.extend({
     props: {
-        addItem: Function
+        submit: {
+            type: Function,
+            required: true
+        },
+        validation: Function,
+        initialValue: String,
+        id: String,
+        buttonText: {
+            type: String,
+            default: "Add"
+        }
     },
     data(): ComponentData {
         return {
-            value: "",
+            value: this.initialValue || "",
             errors: []
         };
     },
     methods: {
         onSubmit: function(e: Event): void {
             e.preventDefault();
-            if (this.checkForm()) {
-                this.addItem({
-                    value: this.value,
-                    key: hashCode(this.value)
-                });
+
+            this.errors = [...this.internalValidation(this.value)];
+            if (this.validation) {
+                this.errors.push(...this.validation(this.value));
+            }
+            if (!this.errors.length || this.initialValue === this.value) {
+                this.submit(this.value);
                 this.value = "";
             }
         },
-        checkForm: function(): boolean {
-            this.errors = [];
+        internalValidation: function(value: string): string[] {
+            const errors = [];
 
-            if (!this.value) {
-                this.errors.push("Please, add the task name!");
-                return false;
+            if (!value) {
+                errors.push("Please, add the task name!");
             }
-            return true;
+            return errors;
         }
+    },
+    mounted: function() {
+        (this.$refs.input as HTMLElement).focus();
     }
 });
 </script>
