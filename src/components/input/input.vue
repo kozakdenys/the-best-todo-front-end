@@ -5,7 +5,7 @@
             <button class="input-form__button" type="submit">{{ buttonText }}</button>
         </div>
         <ul v-if="errors.length || internalErrors.length" class="input-form__validation">
-            <li :key="error" class="validation-error" v-for="error in [...errors, ...internalErrors]">{{ error }}</li>
+            <li :key="error" class="error" v-for="error in [...errors, ...internalErrors]">{{ error }}</li>
         </ul>
     </form>
 </template>

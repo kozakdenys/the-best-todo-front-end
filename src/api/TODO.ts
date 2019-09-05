@@ -10,7 +10,7 @@ function hashCode(value: string): number {
     return hash;
 }
 
-const items = [
+let items = [
     {
         key: 2345234523,
         value: "Test",
@@ -31,9 +31,23 @@ export default {
             }, 1000);
         });
     },
+    getItem: (key: BackItem["key"]): Promise<BackItem> => {
+        return new Promise((resolve): void => {
+            setInterval(() => {
+                resolve(items.find((item: BackItem): boolean => item.key === key));
+            }, 1000);
+        });
+    },
     editItem: (item: BackItem): Promise<BackItem> => {
         return new Promise((resolve): void => {
             setInterval(() => {
+                items = items.map(oldItem => {
+                    if (oldItem.key !== item.key) {
+                        return oldItem;
+                    } else {
+                        return item;
+                    }
+                });
                 resolve(item);
             }, 1000);
         });
@@ -41,6 +55,7 @@ export default {
     removeItem: (key: BackItem["key"]): Promise<BackItem["key"]> => {
         return new Promise((resolve): void => {
             setInterval(() => {
+                items = items.filter(item => item.key !== key);
                 resolve(key);
             }, 1000);
         });

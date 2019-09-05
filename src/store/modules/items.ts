@@ -8,7 +8,11 @@ const state = {
     addItemErrors: []
 };
 
-const getters = {};
+const getters = {
+    itemDetails: (state: Items): Function => (key: Item["key"]): Item | undefined => {
+        return state.all.find((item: Item): boolean => item.key === key);
+    }
+};
 
 const actions = {
     getItems({ commit }: { commit: Function }): void {

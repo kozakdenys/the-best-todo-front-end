@@ -1,0 +1,40 @@
+<template>
+    <div class="main">
+        <section class="header container">
+            <div class="row">
+                <h1>Every DEV should have TODO!</h1>
+                <TODOInput :submit="addItem" :errors="errors" class="input-form--header" id="task-form" />
+            </div>
+        </section>
+        <section class="list container">
+            <div class="row">
+                <TODOList />
+            </div>
+        </section>
+    </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import { mapState, mapActions } from "vuex";
+import input from "../input/input.vue";
+import list from "../list/list.vue";
+
+export default Vue.extend({
+    components: {
+        TODOInput: input,
+        TODOList: list
+    },
+    computed: mapState({
+        errors: (state: State) => state.items.addItemErrors
+    }),
+    methods: {
+        ...mapActions("items", ["addItem"])
+    },
+    created() {
+        this.$store.dispatch("items/getItems");
+    }
+});
+</script>
+
+<style src="./main.css"></style>

@@ -15,11 +15,7 @@ button {
     border-color:  #90caf9;
 }
 
-.strikethrough {
-    text-decoration: line-through;
-}
-
-.main {
+.app {
     background-color: #f6f6f6;
     min-height: 100%;
 }
@@ -38,14 +34,4 @@ button {
     .row {
         width: calc(100% - 40px);
     }
-}
-
-.header {
-    background-color: #90caf9;
-    color: #ffffff;
-    box-shadow: 0 0 20px #5d99c6
-}
-
-.validation-error {
-    color: #b71c1c;
 }

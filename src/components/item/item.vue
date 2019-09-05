@@ -9,7 +9,9 @@
     ></TODOInput>
     <div v-else class="item">
         <CustomCheckbox class="input__checkbox" :change="onCheck" :value="item.done" />
-        <span :class="`item__text ${item.done ? 'strikethrough' : ''}`">{{ item.value }}</span>
+        <router-link :to="`/details/${item.key}`" :class="`item__text ${item.done ? 'strikethrough' : ''}`">
+            {{ item.value }}
+        </router-link>
         <button class="item__button item__button--remove" @click="onRemove">Remove</button>
         <button class="item__button item__button--edit" @click="onEditClick">Edit</button>
     </div>

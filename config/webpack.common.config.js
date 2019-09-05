@@ -7,7 +7,7 @@ module.exports = {
     entry: APP_DIR + "/index.ts",
     output: {
         path: BUILD_DIR,
-        publicPath: "./",
+        publicPath: "/",
         chunkFilename: "[name].[hash].js",
         filename: "[name].[hash].js"
     },

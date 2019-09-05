@@ -11,7 +11,8 @@ module.exports = {
     devServer: {
         contentBase: APP_DIR,
         open: true,
-        hot: true
+        hot: true,
+        historyApiFallback: true
     },
     plugins: [
         new VueLoaderPlugin(),
