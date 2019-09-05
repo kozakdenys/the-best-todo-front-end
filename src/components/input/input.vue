@@ -4,8 +4,8 @@
             <input type="text" v-model="value" ref="input" class="input-form__input" />
             <button class="input-form__button" type="submit">{{ buttonText }}</button>
         </div>
-        <ul v-if="errors.length" class="input-form__validation">
-            <li :key="error" class="validation-error" v-for="error in errors">{{ error }}</li>
+        <ul v-if="errors.length || internalErrors.length" class="input-form__validation">
+            <li :key="error" class="validation-error" v-for="error in [...errors, ...internalErrors]">{{ error }}</li>
         </ul>
     </form>
 </template>
@@ -15,7 +15,7 @@ import Vue from "vue";
 
 interface ComponentData {
     value: string;
-    errors: string[];
+    internalErrors: string[];
 }
 
 export default Vue.extend({
@@ -24,29 +24,27 @@ export default Vue.extend({
             type: Function,
             required: true
         },
-        validation: Function,
         initialValue: String,
         id: String,
         buttonText: {
             type: String,
             default: "Add"
-        }
+        },
+        errors: Array
     },
     data(): ComponentData {
         return {
             value: this.initialValue || "",
-            errors: []
+            internalErrors: []
         };
     },
+
     methods: {
         onSubmit: function(e: Event): void {
             e.preventDefault();
 
-            this.errors = [...this.internalValidation(this.value)];
-            if (this.validation) {
-                this.errors.push(...this.validation(this.value));
-            }
-            if (!this.errors.length || this.initialValue === this.value) {
+            this.internalErrors = [...this.internalValidation(this.value)];
+            if (!this.internalErrors.length || this.initialValue === this.value) {
                 this.submit(this.value);
                 this.value = "";
             }

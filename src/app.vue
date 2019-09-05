@@ -3,22 +3,12 @@
         <section class="header container">
             <div class="row">
                 <h1>Every DEV should have TODO!</h1>
-                <TODOInput
-                    class="input-form--header"
-                    :submit="addItem"
-                    :validation="validation"
-                    id="task-form"
-                ></TODOInput>
+                <TODOInput :submit="addItem" :errors="errors" class="input-form--header" id="task-form" />
             </div>
         </section>
         <section class="list container">
             <div class="row">
-                <TODOList
-                    :items="items"
-                    :removeItem="removeItem"
-                    :editItem="editItem"
-                    :validation="validation"
-                ></TODOList>
+                <TODOList />
             </div>
         </section>
     </main>
@@ -26,70 +16,23 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapState, mapActions } from "vuex";
 import input from "./components/input/input.vue";
 import list from "./components/list/list.vue";
 
-function hashCode(value: string): number {
-    let hash = 0;
-    for (let i = 0; i < value.length; i++) {
-        const character = value.charCodeAt(i);
-        hash = (hash << 5) - hash + character;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-}
-
-interface ComponentData {
-    items: Item[];
-    value: string;
-}
-
-interface Item {
-    key: number;
-    value: string;
-    done: boolean;
-}
-
 export default Vue.extend({
-    data(): ComponentData {
-        return {
-            items: [],
-            value: ""
-        };
-    },
     components: {
         TODOInput: input,
         TODOList: list
     },
+    computed: mapState({
+        errors: (state: State) => state.items.addItemErrors
+    }),
     methods: {
-        validation: function(value: string): string[] {
-            const errors = [];
-            const duplicateItem = this.items.find(item => item.value === value);
-            if (duplicateItem) {
-                errors.push("Such TODO already exists");
-            }
-            return errors;
-        },
-        addItem: function(value: string): void {
-            const item = {
-                value: value,
-                key: hashCode(value),
-                done: false
-            };
-            this.items.unshift(item);
-        },
-        removeItem: function(key: number): void {
-            this.items = this.items.filter(item => item.key !== key);
-        },
-        editItem: function(item: Item): void {
-            this.items = this.items.map(oldItem => {
-                if (oldItem.key !== item.key) {
-                    return oldItem;
-                } else {
-                    return item;
-                }
-            });
-        }
+        ...mapActions("items", ["addItem"])
+    },
+    created() {
+        this.$store.dispatch("items/getItems");
     }
 });
 </script>

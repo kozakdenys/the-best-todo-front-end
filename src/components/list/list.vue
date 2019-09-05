@@ -1,22 +1,20 @@
 <template>
     <ul class="list">
         <li v-for="item in items" :key="item.key">
-            <TODOItem :item="item" :edit="editItem" :remove="removeItem" :validation="validation" />
+            <TODOItem :item="item" />
         </li>
     </ul>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { mapState } from "vuex";
 import item from "../item/item.vue";
 
 export default Vue.extend({
-    props: {
-        items: Array,
-        removeItem: Function,
-        editItem: Function,
-        validation: Function
-    },
+    computed: mapState({
+        items: (state: State) => state.items.all
+    }),
     components: {
         TODOItem: item
     }

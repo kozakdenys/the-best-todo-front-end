@@ -19,7 +19,8 @@
     "author": "Denys Kozak",
     "license": "MIT",
     "dependencies": {
-        "vue": "^2.6.10"
+        "vue": "^2.6.10",
+        "vuex": "^3.1.1"
     },
     "devDependencies": {
         "@types/jest": "^24.0.18",
