@@ -68,7 +68,7 @@ const mutations = {
             }
         });
     },
-    editItemErrors(state: Items, { key, errors }: { key: Item["key"]; errors: string[] }): void {
+    editItemErrors(state: Items, { key, errors }: { key: Item["key"]; errors: Error[] }): void {
         state.all = state.all.map(oldItem => {
             if (oldItem.key !== key) {
                 return oldItem;
@@ -87,7 +87,7 @@ const mutations = {
         state.addItemErrors = [];
         state.all.unshift(item);
     },
-    addItemErrors(state: Items, { errors }: { errors: string[] }): void {
+    addItemErrors(state: Items, { errors }: { errors: Error[] }): void {
         state.addItemErrors = errors;
     }
 };

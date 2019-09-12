@@ -1,0 +1,12 @@
+.auth-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-form__label {
+    margin: 10px 0;
+}
+
+.auth-form__submit {
+    margin: 20px 0;
+}

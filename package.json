@@ -19,11 +19,13 @@
     "author": "Denys Kozak",
     "license": "MIT",
     "dependencies": {
+        "isomorphic-fetch": "^2.2.1",
         "vue": "^2.6.10",
         "vue-router": "^3.1.3",
         "vuex": "^3.1.1"
     },
     "devDependencies": {
+        "@types/isomorphic-fetch": "0.0.35",
         "@types/jest": "^24.0.18",
         "@typescript-eslint/eslint-plugin": "^2.0.0",
         "@typescript-eslint/parser": "^2.0.0",

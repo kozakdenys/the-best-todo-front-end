@@ -12,7 +12,8 @@ button {
     border-width: 2px;
     border-radius: 5px;
     border-style: solid;
-    border-color:  #90caf9;
+    cursor: pointer;
+    height: 100%;
 }
 
 .app {
@@ -20,9 +21,20 @@ button {
     min-height: 100%;
 }
 
+.header {
+    background-color: #90caf9;
+    color: #ffffff;
+    box-shadow: 0 0 20px #5d99c6
+}
+
+.header button {
+    border-color:  #ffffff;
+}
+
 .container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .row {
@@ -30,8 +42,30 @@ button {
     padding: 20px;
 }
 
+.header--auth .row {
+    width: 400px;
+}
+
+.text-input {
+    color: #5d99c6;
+    font: inherit;
+    padding: 10px 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #e3f2fd;
+    border-radius: 5px;
+}
+
+.validation_list {
+    padding-inline-start: 0;
+}
+
+.validation_list li{
+    display: block;
+}
+
 @media only screen and (max-width: 640px) {
     .row {
-        width: calc(100% - 40px);
+        width: calc(100% - 40px)!important;
     }
 }

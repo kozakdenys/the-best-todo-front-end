@@ -1,11 +1,13 @@
 <template>
     <form :id="id" @submit="onSubmit" class="input-form">
         <div class="input-form__input-container">
-            <input type="text" v-model="value" ref="input" class="input-form__input" />
+            <input type="text" v-model="value" ref="input" class="text-input input-form__input" />
             <button class="input-form__button" type="submit">{{ buttonText }}</button>
         </div>
-        <ul v-if="errors.length || internalErrors.length" class="input-form__validation">
-            <li :key="error" class="error" v-for="error in [...errors, ...internalErrors]">{{ error }}</li>
+        <ul v-if="errors.length || internalErrors.length" class="validation_list">
+            <li :key="index" class="error" v-for="(error, index) in [...errors, ...internalErrors]">
+                {{ error || error.message }}
+            </li>
         </ul>
     </form>
 </template>
@@ -15,7 +17,7 @@ import Vue from "vue";
 
 interface ComponentData {
     value: string;
-    internalErrors: string[];
+    internalErrors: Error[];
 }
 
 export default Vue.extend({
@@ -49,11 +51,11 @@ export default Vue.extend({
                 this.value = "";
             }
         },
-        internalValidation: function(value: string): string[] {
+        internalValidation: function(value: string): Error[] {
             const errors = [];
 
             if (!value) {
-                errors.push("Please, add the task name!");
+                errors.push(new Error("Please, add the task name!"));
             }
             return errors;
         }
