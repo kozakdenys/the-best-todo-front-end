@@ -3,7 +3,7 @@ import BackItem from "../models/backItem";
 import { AuthPayload, User } from "../interfaces/auth";
 import { getAccessToken } from "../tools/tokenTools";
 
-const API_URL = "http://localhost:4000";
+const API_URL = `http://${location.hostname}:4000`;
 
 export function graphqlFetch(query: string, variables?: object): Promise<Response> {
     const init = {
