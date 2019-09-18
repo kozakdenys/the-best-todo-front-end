@@ -3,7 +3,16 @@ const merge = require("webpack-merge");
 const commonConfig = require("../config/webpack.common.config.js");
 const prodConfig = require("../config/webpack.prod.config.js");
 
-const config = merge(commonConfig, prodConfig);
+let config = merge(commonConfig, prodConfig);
+const isDevEnv = process.argv.includes("--dev");
+
+if (isDevEnv) {
+    BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+    config = {
+        ...config,
+        plugins: [...config.plugins, new BundleAnalyzerPlugin()],
+    };
+}
 
 webpack(config, (err, stats) => {
     const info = stats.toJson();
