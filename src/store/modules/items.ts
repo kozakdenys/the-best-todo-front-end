@@ -9,8 +9,8 @@ const state = {
 };
 
 const getters = {
-    itemDetails: (state: Items): Function => (key: Item["key"]): Item | undefined => {
-        return state.all.find((item: Item): boolean => item.key === key);
+    itemDetails: (state: Items): Function => (id: Item["id"]): Item | undefined => {
+        return state.all.find((item: Item): boolean => item.id === id);
     }
 };
 
@@ -29,18 +29,18 @@ const actions = {
             })
             .catch(errors => {
                 commit("editItemErrors", {
-                    key: item.key,
+                    id: item.id,
                     errors: errors
                 });
             });
     },
-    removeItem({ commit }: { commit: Function }, key: Item["key"]): void {
-        api.removeItem(key).then(() => {
-            commit("removeItem", { key });
+    removeItem({ commit }: { commit: Function }, id: Item["id"]): void {
+        api.removeItem(id).then(() => {
+            commit("removeItem", { id });
         });
     },
-    addItem({ commit }: { commit: Function }, value: Item["value"]): void {
-        api.addItem(value)
+    addItem({ commit }: { commit: Function }, name: Item["name"]): void {
+        api.addItem(name)
             .then(backItem => {
                 commit("addItem", {
                     item: new Item(backItem)
@@ -58,7 +58,7 @@ const mutations = {
     },
     editItem(state: Items, { item }: { item: Item }): void {
         state.all = state.all.map(oldItem => {
-            if (oldItem.key !== item.key) {
+            if (oldItem.id !== item.id) {
                 return oldItem;
             } else {
                 return {
@@ -68,9 +68,9 @@ const mutations = {
             }
         });
     },
-    editItemErrors(state: Items, { key, errors }: { key: Item["key"]; errors: Error[] }): void {
+    editItemErrors(state: Items, { id, errors }: { id: Item["id"]; errors: Error[] }): void {
         state.all = state.all.map(oldItem => {
-            if (oldItem.key !== key) {
+            if (oldItem.id !== id) {
                 return oldItem;
             } else {
                 return {
@@ -80,8 +80,8 @@ const mutations = {
             }
         });
     },
-    removeItem(state: Items, { key }: { key: Item["key"] }): void {
-        state.all = state.all.filter(item => item.key !== key);
+    removeItem(state: Items, { id }: { id: Item["id"] }): void {
+        state.all = state.all.filter(item => item.id !== id);
     },
     addItem(state: Items, { item }: { item: Item }): void {
         state.addItemErrors = [];

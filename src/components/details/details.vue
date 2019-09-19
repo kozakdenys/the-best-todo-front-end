@@ -2,7 +2,7 @@
     <div class="main">
         <section class="container">
             <div class="row">
-                {{ details && details.value }}
+                {{ details && details.name }}
             </div>
         </section>
     </div>
@@ -17,7 +17,7 @@ export default Vue.extend({
         details: (state: State) => state.details.details
     }),
     created() {
-        this.$store.dispatch("details/getDetails", +this.$route.params.key);
+        this.$store.dispatch("details/getDetails", +this.$route.params.id);
     }
 });
 </script>

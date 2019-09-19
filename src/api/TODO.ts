@@ -1,8 +1,11 @@
 import fetch from "isomorphic-fetch";
 import BackItem from "../models/backItem";
+import FrontItem from "../models/frontItem";
 import { AuthPayload, User } from "../interfaces/auth";
+import { Feed } from "../interfaces/feed";
 import { getAccessToken } from "../tools/tokenTools";
 
+//TODO use env variable
 const API_URL = `http://${location.hostname}:4000`;
 
 export function graphqlFetch(query: string, variables?: object): Promise<Response> {
@@ -45,101 +48,114 @@ export function TODOFetch(query: string, variables?: object): Promise<object> {
         });
 }
 
-function hashCode(value: string): number {
-    let hash = 0;
-    for (let i = 0; i < value.length; i++) {
-        const character = value.charCodeAt(i);
-        hash = (hash << 5) - hash + character;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-}
-
-let items = [
-    {
-        key: 2345234523,
-        value: "Test",
-        done: false
-    },
-    {
-        key: 52345234,
-        value: "Test2",
-        done: false
-    }
-];
-
-const user = {
-    id: "adfaasf",
-    name: "asdgfadfa"
-};
-
 export default {
     getItems: (): Promise<BackItem[]> => {
-        return new Promise((resolve): void => {
-            setInterval(() => {
-                resolve(items);
-            }, 1000);
-        });
-    },
-    getItem: (key: BackItem["key"]): Promise<BackItem> => {
-        return new Promise((resolve): void => {
-            setInterval(() => {
-                resolve(items.find((item: BackItem): boolean => item.key === key));
-            }, 1000);
-        });
-    },
-    editItem: (item: BackItem): Promise<BackItem> => {
-        return new Promise((resolve): void => {
-            setInterval(() => {
-                items = items.map(oldItem => {
-                    if (oldItem.key !== item.key) {
-                        return oldItem;
-                    } else {
-                        return item;
+        // TODO use fragments
+        return (TODOFetch(
+            `
+            query GetFeed {
+                feed {
+                    items {
+                        id
+                        createdAt
+                        updatedAt
+                        name
+                        done
                     }
-                });
-                resolve(item);
-            }, 1000);
-        });
-    },
-    removeItem: (key: BackItem["key"]): Promise<BackItem["key"]> => {
-        return new Promise((resolve): void => {
-            setInterval(() => {
-                items = items.filter(item => item.key !== key);
-                resolve(key);
-            }, 1000);
-        });
-    },
-    addItem: (value: BackItem["value"]): Promise<BackItem> => {
-        return new Promise((resolve, reject): void => {
-            setInterval(() => {
-                if (items.find(item => item.value === value)) {
-                    reject(["Such TODO already exists"]);
-                } else {
-                    const item = {
-                        value: value,
-                        key: hashCode(value),
-                        done: false
-                    };
-                    items.unshift(item);
-                    resolve(item);
                 }
-            }, 1000);
-        });
+            }`
+        ) as Promise<{ feed: Feed }>).then(({ feed }) => feed.items);
     },
+    getItem: (id: FrontItem["id"]): Promise<BackItem> => {
+        // TODO use fragments
+        return (TODOFetch(
+            `
+            query GetItem($id: ID!) {
+                item(id: $id) {
+                    id
+                    createdAt
+                    updatedAt
+                    name
+                    done
+                }
+            }`,
+            {
+                id
+            }
+        ) as Promise<{ item: BackItem }>).then(({ item }) => item);
+    },
+    // TODO use fragments
+    editItem: (item: FrontItem): Promise<BackItem> => {
+        return (TODOFetch(
+            `
+            mutation UpdateItem($id: ID!, $name: String, $description: String, $done: Boolean) {
+                updateItem(id: $id, name: $name, description: $description, done: $done) {
+                    id
+                    createdAt
+                    updatedAt
+                    name
+                    done
+                }
+            }`,
+            {
+                ...item
+            }
+        ) as Promise<{ updateItem: BackItem }>).then(({ updateItem }) => updateItem);
+    },
+    // TODO use fragments
+    removeItem: (id: FrontItem["id"]): Promise<BackItem["id"]> => {
+        return (TODOFetch(
+            `
+            mutation DeleteItem($id: ID!) {
+                deleteItem(id: $id) {
+                    id
+                }
+            }`,
+            {
+                id
+            }
+        ) as Promise<{ deleteItem: { id: BackItem["id"] } }>).then(({ deleteItem }) => deleteItem.id);
+    },
+    // TODO use fragments
+    addItem: (name: BackItem["name"]): Promise<BackItem> => {
+        return (TODOFetch(
+            `
+            mutation CreateItem($name: String!) {
+                createItem(name: $name) {
+                    id
+                    createdAt
+                    updatedAt
+                    name
+                    done
+                }
+            }`,
+            {
+                name
+            }
+        ) as Promise<{ createItem: BackItem }>).then(({ createItem }) => createItem);
+    },
+    //TODO use interface
     login: ({ name, password }: { name: User["name"]; password: string }): Promise<AuthPayload> => {
-        return new Promise((resolve, reject): void => {
-            user.name = name;
-            setInterval(() => {
-                resolve({
-                    token: "adfadf",
-                    user
-                });
-            }, 1000);
-        });
+        return (TODOFetch(
+            `
+            mutation Login($name: String!, $password: String!) {
+                login(name: $name, password: $password) {
+                    token
+                    user {
+                        id
+                        name
+                    }
+                }
+            }`,
+            {
+                name,
+                password
+            }
+        ) as Promise<{ login: AuthPayload }>).then(({ login }) => login);
     },
+    //TODO use interface
     signUp: ({ name, password }: { name: User["name"]; password: string }): Promise<AuthPayload> => {
-        return TODOFetch(
+        return (TODOFetch(
             `
             mutation CreateUser($name: String!, $password: String!) {
                 signup(name: $name, password: $password) {
@@ -154,13 +170,17 @@ export default {
                 name,
                 password
             }
-        ) as Promise<AuthPayload>;
+        ) as Promise<{ signup: AuthPayload }>).then(({ signup }) => signup);
     },
     getUser: (): Promise<User> => {
-        return new Promise((resolve, reject): void => {
-            setInterval(() => {
-                resolve(user);
-            }, 1000);
-        });
+        return (TODOFetch(
+            `
+            query GetUser {
+                user {
+                    id
+                    name
+                }
+            }`
+        ) as Promise<{ user: User }>).then(({ user }) => user);
     }
 };

@@ -17,7 +17,7 @@ const routes = [
         }
     },
     {
-        path: "/details/:key",
+        path: "/details/:id",
         component: Details,
         meta: {
             requiresAuth: true

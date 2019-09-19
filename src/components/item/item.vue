@@ -2,15 +2,15 @@
     <TODOInput
         v-if="editMode"
         :submit="editItem"
-        :initial-value="item.value"
+        :initial-value="item.name"
         button-text="Edit"
         :errors="item.errors"
-        :id="`edit-task-form-${item.key}`"
+        :id="`edit-task-form-${item.id}`"
     ></TODOInput>
     <div v-else class="item">
         <CustomCheckbox class="input__checkbox" :change="onCheck" :value="item.done" />
-        <router-link :to="`/details/${item.key}`" :class="`item__text ${item.done ? 'strikethrough' : ''}`">
-            {{ item.value }}
+        <router-link :to="`/details/${item.id}`" :class="`item__text ${item.done ? 'strikethrough' : ''}`">
+            {{ item.name }}
         </router-link>
         <button class="item__button item__button--remove" @click="onRemove">Remove</button>
         <button class="item__button item__button--edit" @click="onEditClick">Edit</button>
@@ -40,7 +40,7 @@ export default Vue.extend({
             this.editMode = true;
         },
         onRemove: function(): void {
-            this.$store.dispatch("items/removeItem", this.item.key);
+            this.$store.dispatch("items/removeItem", this.item.id);
         },
         onCheck: function(): void {
             this.$store.dispatch("items/editItem", {
@@ -52,7 +52,7 @@ export default Vue.extend({
             this.editMode = false;
             this.$store.dispatch("items/editItem", {
                 ...this.item,
-                value
+                name: value
             });
         }
     },

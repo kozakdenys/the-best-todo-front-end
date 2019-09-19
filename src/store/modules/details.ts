@@ -9,8 +9,8 @@ const state = {
 const getters = {};
 
 const actions = {
-    getDetails({ commit }: { commit: Function }, key: Item["key"]): void {
-        api.getItem(key).then((backItem: BackItem) => {
+    getDetails({ commit }: { commit: Function }, id: Item["id"]): void {
+        api.getItem(id).then((backItem: BackItem) => {
             commit("setDetails", { item: new Item(backItem) });
         });
     },
