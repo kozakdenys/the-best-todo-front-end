@@ -8,7 +8,7 @@
         :id="`edit-task-form-${item.id}`"
     ></TODOInput>
     <div v-else class="item">
-        <CustomCheckbox class="input__checkbox" :change="onCheck" :value="item.done" />
+        <CustomCheckbox class="input__checkbox" :change="onCheck" :checked="item.done" />
         <router-link :to="`/details/${item.id}`" :class="`item__text ${item.done ? 'strikethrough' : ''}`">
             {{ item.name }}
         </router-link>
